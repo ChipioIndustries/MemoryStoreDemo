@@ -1,0 +1,25 @@
+{
+	"name": "MemoryStoreDemo",
+	"tree": {
+	  "$className": "DataModel",
+	  "ReplicatedStorage": {
+		"$className": "ReplicatedStorage",
+		"$ignoreUnknownInstances": true,
+		"$path": "src/shared"
+	  },
+	  "ServerScriptService": {
+		"$className": "ServerScriptService",
+		"$ignoreUnknownInstances": true,
+		"$path": "src/server"
+	  },
+	  "StarterPlayer": {
+		"$className": "StarterPlayer",
+		"StarterPlayerScripts": {
+		  "$className": "StarterPlayerScripts",
+		  "$ignoreUnknownInstances": true,
+		  "$path": "src/client"
+		},
+		"$ignoreUnknownInstances": true
+	  }
+	}
+  }
