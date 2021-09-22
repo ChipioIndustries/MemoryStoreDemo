@@ -49,12 +49,13 @@ function MemoryStoreExplorer:getSortedMapsContents(): table
 	for sortedMapKey: string, alsoSortedMapKey: string in pairs(sortedMapKeys) do
 		local sortedMap: MemoryStoreSortedMap = MemoryStoreService:GetSortedMap(sortedMapKey)
 		local contents: table = {}
+		local lastKey
 
 		repeat
-			local success: boolean, result = pcall(sortedMap.GetRangeAsync, sortedMap, Enum.SortDirection.Ascending, 200)
+			local success: boolean, result = pcall(sortedMap.GetRangeAsync, sortedMap, Enum.SortDirection.Ascending, 200, lastKey)
 			if not success then
 				warn(result)
-			elseif result then
+			elseif result and table.getn(result) > 0 then
 				for index, value in pairs(result) do
 					contents[index] = value
 				end
@@ -80,7 +81,7 @@ end
 task.spawn(function()
 	while true do
 		task.wait(CONTENTS_REFRESH_RATE)
-		print(MemoryStoreExplorer:getAllContents())
+		--print(MemoryStoreExplorer:getAllContents())
 	end
 end)
 

@@ -22,7 +22,10 @@ MODULE API REFERENCE
 	dictionary getSortedMapsContents() - Returns full contents of all tracked sorted maps.
 	dictionary getAllContents() - Returns full contents of all tracked queues and sorted maps.
 
-TODO
+NOTES
 
-	GetRangeAsync: exclusive bounds, values or indexes? add 1 and 2 as values and call with 1 as exclusivelowerbound, see what happens
+	GetRangeAsync sorts by keys, which are strings. This means numbers must be padded with 0's to sort correctly.
+	The exclusiveBounds parameters control where the range starts and ends - these should be key values.
+	For example, lower="001" higher="015" will return all values from "002" to "014".
+
 ]]
