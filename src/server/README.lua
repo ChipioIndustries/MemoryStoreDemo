@@ -12,20 +12,57 @@ When enough players are present to create a match, the server reserves a server 
 
 When a lobby server detects a broadcast with one of its players' user IDs, it teleports the player to the server ID.
 
+SYSTEM CONFIGURATION
+
+All contstants are hosted within the ReplicatedStorage.CONFIG module for easy configuration. For more advanced modification, refer to the module API reference below.
+
 MODULE API REFERENCE
 
 	MemoryStoreExplorer.lua
 	Occasionally prints contents of all MemoryStores across the game. Useful for debugging.
-	boolean registerQueueKey(string queueKey) - Enables tracking on the given queue key.
-	boolean registerSortedMapKey(string sortedMapKey) - Enables tracking on the given sorted map key.
-	dictionary getQueuesContents() - Returns full contents of all tracked queues.
-	dictionary getSortedMapsContents() - Returns full contents of all tracked sorted maps.
-	dictionary getAllContents() - Returns full contents of all tracked queues and sorted maps.
+
+		void init() - Begin printing memorystore contents
+		boolean registerQueueKey(string queueKey) - Enables tracking on the given queue key.
+		boolean registerSortedMapKey(string sortedMapKey) - Enables tracking on the given sorted map key.
+		dictionary getQueuesContents() - Returns full contents of all tracked queues.
+		dictionary getSortedMapsContents() - Returns full contents of all tracked sorted maps.
+		dictionary getAllContents() - Returns full contents of all tracked queues and sorted maps.
+
+		Example getAllContents result:
+		{
+			queuesContents = {
+				myQueue = {
+					"hello world";
+					"hello world again"
+				}
+			};
+			sortedMapsContents = {
+				myMap = {
+					{
+						"key" = "hello";
+						"value" = "world"
+					}
+				}
+			}
+		}
+
+	LobbyPlayerHandler.lua
+	Registers players
+
+	GetServerType.lua
+	A function that returns the current server type based on whether or not a reserved server ID is present.
+
+		Usage:
+		if GetServerType() == Enums.ServerType.Lobby then
+			print("lobby")
+		end
 
 NOTES
 
 	GetRangeAsync sorts by keys, which are strings. This means numbers must be padded with 0's to sort correctly.
 	The exclusiveBounds parameters control where the range starts and ends - these should be key values.
 	For example, lower="001" higher="015" will return all values from "002" to "014".
+
+	ReadAsync returns nil if queue is empty.
 
 ]]

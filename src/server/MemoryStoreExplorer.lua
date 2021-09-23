@@ -1,8 +1,10 @@
 local MemoryStoreService: MemoryStoreService = game:GetService("MemoryStoreService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local MemoryStoreExplorer: table = {}
 
-local CONTENTS_REFRESH_RATE: number = 5
+local CONFIG = require(ReplicatedStorage.CONFIG)
+local CONTENTS_REFRESH_RATE = CONFIG.CONTENTS_REFRESH_RATE
 
 local queueKeys: table = {}
 local sortedMapKeys: table = {}
@@ -78,11 +80,13 @@ function MemoryStoreExplorer:getAllContents(): table
 	}
 end
 
-task.spawn(function()
-	while true do
-		task.wait(CONTENTS_REFRESH_RATE)
-		--print(MemoryStoreExplorer:getAllContents())
-	end
-end)
+function MemoryStoreExplorer:init()
+	task.spawn(function()
+		while true do
+			task.wait(CONTENTS_REFRESH_RATE)
+			print(MemoryStoreExplorer:getAllContents())
+		end
+	end)
+end
 
 return MemoryStoreExplorer
