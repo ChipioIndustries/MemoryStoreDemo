@@ -46,8 +46,10 @@ MODULE API REFERENCE
 			}
 		}
 
-	LobbyPlayerHandler.lua
-	Registers players
+	MatchmakingProcessor.lua
+	A module that controls the matchmaking job.
+
+		void init() - Send matchmaking job to CrossServerMutex.lua
 
 	CrossServerMutex.lua
 	A module that handles delegation of tasks to a specific server.
@@ -59,7 +61,8 @@ MODULE API REFERENCE
 
 		Sample Job:
 		{
-			void function startJob()
+			void function startJob() - callback to start job
+			void function releaseAsync() - callback to end job as soon as possible. should yield until job is cleaned up.
 		}
 
 	GetServerType.lua
