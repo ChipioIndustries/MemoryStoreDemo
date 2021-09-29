@@ -49,6 +49,19 @@ MODULE API REFERENCE
 	LobbyPlayerHandler.lua
 	Registers players
 
+	CrossServerMutex.lua
+	A module that handles delegation of tasks to a specific server.
+
+		void init() - Begin occasional attempts to claim control
+		void assignJob(table job) - Adds job to a list of jobs to start when mutex control is claimed
+		boolean releaseAsync() - Waits for all jobs to complete and then releases control over the mutex
+		void requestReservation() - Attempt to claim mutex control. This is primarily to be called by the init method.
+
+		Sample Job:
+		{
+			void function startJob()
+		}
+
 	GetServerType.lua
 	A function that returns the current server type based on whether or not a reserved server ID is present.
 
