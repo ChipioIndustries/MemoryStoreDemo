@@ -8,7 +8,7 @@ return {
 		--the name of the queue passed to MemoryStoreService. WARNING: changing this while servers are running may have unintended consequences.
 		NAME = "Matchmaking";
 		--how long read values are hidden
-		INVISIBILITY_TIMEOUT = 30;
+		INVISIBILITY_TIMEOUT = 60;
 		--max players to read from queue at a time
 		READ_BATCH_SIZE = 20;
 		--max wait period before call fails
@@ -23,4 +23,14 @@ return {
 		--how frequently (in seconds) the server attempts to reserve the mutex
 		CLAIM_ATTEMPT_RATE = 20;
 	};
+
+	MATCH = {
+		SIZE = {
+			--minimum number of players in a match
+			MIN = 2;
+			--maximum number of players in a match
+			MAX = 8;
+		}
+
+	}
 }
