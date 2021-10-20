@@ -50,6 +50,7 @@ MODULE API REFERENCE
 	A module that controls the matchmaking job.
 
 		void init() - Send matchmaking job to CrossServerMutex.lua
+		bool addPlayer(int userId) - Add player to matchmaking queue. Returns whether or not it was successful.
 
 	CrossServerMutex.lua
 	A module that handles delegation of tasks to a specific server.

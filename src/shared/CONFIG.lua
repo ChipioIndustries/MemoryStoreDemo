@@ -13,6 +13,12 @@ return {
 		READ_BATCH_SIZE = 20;
 		--max wait period before call fails
 		WAIT_TIMEOUT = 15;
+		--the number of seconds to wait between queue retrievals
+		QUEUE_RETRIEVAL_RATE = 1;
+		--maximum number of attempts to add a player to the queue
+		MAX_ADD_RETRIES = 5;
+		--how many seconds the player will be in the matchmaking queue for
+		QUEUE_ENTRY_LIFETIME = 300;
 	};
 
 	MUTEX = {
