@@ -1,11 +1,14 @@
 local MemoryStoreService = game:GetService("MemoryStoreService")
-local MessagingService = game:GetService("MessagingService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 
 local CrossServerMutex = require(ServerScriptService.CrossServerMutex)
+local MessagingProcessor = require(ServerScriptService.MessagingProcessor)
+local TableUtility = require(ServerScriptService.TableUtility)
 
 local CONFIG = require(ReplicatedStorage.CONFIG)
+
+local RETRY_DELAY = CONFIG.RETRY_DELAY
 
 local QUEUE_NAME = CONFIG.MATCHMAKING_QUEUE.NAME
 local QUEUE_INVISIBILITY_TIMEOUT = CONFIG.MATCHMAKING_QUEUE.INVISIBILITY_TIMEOUT
@@ -18,6 +21,8 @@ local MAX_MATCH_SIZE = CONFIG.MATCH.SIZE.MAX
 local MIN_MATCH_SIZE = CONFIG.MATCH.SIZE.MIN
 
 local queue = MemoryStoreService:GetQueue(QUEUE_NAME, QUEUE_INVISIBILITY_TIMEOUT)
+
+local MatchmakingProcessor = {}
 
 local matchmakingJob = {}
 local isReleasing = false
@@ -38,9 +43,12 @@ function matchmakingJob.startJob()
 			if not isReleasing then
 				local pool = {}
 
+				--move player cache to pool for processing, then clear cache
 				for i, v in pairs(cache) do
 					pool[i] = v
 				end
+
+				cache = {}
 
 				repeat
 					local nextMatch = {}
@@ -49,14 +57,31 @@ function matchmakingJob.startJob()
 						nextMatch[i] = pool[i]
 					end
 
-					for i = 1, MAX_MATCH_SIZE do
-						if nextMatch[1] then
-							table.remove(nextMatch, 1)
+					local isLargeEnough = #nextMatch >= MIN_MATCH_SIZE
+
+					if isLargeEnough then
+						--TODO: make match!
+						local matchMade = MessagingProcessor:sendMatch(nextMatch)
+
+						if matchMade then
+							pool = TableUtility:removeRange(pool, 1, MAX_MATCH_SIZE)
 						end
 					end
 
-				until #nextMatch < MIN_MATCH_SIZE
+				until not isLargeEnough
+
+				--add unprocessed players back to cache
+				cache = TableUtility:join(pool, cache)
 			else
+				--ensure no new players will be added to the cache
+				while isRetrieving do
+					task.wait()
+				end
+				--add all cached players who won't be processed back to the queue
+				for _, player in pairs(cache) do
+					MatchmakingProcessor:addPlayer(player)
+				end
+
 				isProcessing = false
 				break
 			end
@@ -128,8 +153,6 @@ function matchmakingJob.releaseAsync()
 	return true
 end
 
-local MatchmakingProcessor = {}
-
 function MatchmakingProcessor:init()
 	CrossServerMutex:assignJob(matchmakingJob)
 end
@@ -137,10 +160,11 @@ end
 function MatchmakingProcessor:addPlayer(userId)
 	local success, result
 	local attempts = 0
-	
+
 	repeat
 		attempts += 1
 		success, result = pcall(queue.AddAsync, queue, userId, QUEUE_ENTRY_LIFETIME)
+		task.wait(RETRY_DELAY)
 	until success or attempts >= MAX_ADD_RETRIES
 
 	if not success then

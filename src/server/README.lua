@@ -74,6 +74,13 @@ MODULE API REFERENCE
 			print("lobby")
 		end
 
+	TableUtility.lua
+	A module of functions for dealing with immutable tables (it's not Cryo, don't think it's Cryo)
+
+		table removeRange(table table, int start, int stop) - returns new table minus [start, stop] range.
+		table join(table1, table2...) - returns a new table containing contents of all provided tables.
+										order of arguments determines final order in table.
+
 NOTES
 
 	GetRangeAsync sorts by keys, which are strings. This means numbers must be padded with 0's to sort correctly.

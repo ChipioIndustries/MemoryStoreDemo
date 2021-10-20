@@ -3,6 +3,8 @@
 return {
 	--how often the contents of all memory stores should be printed by MemoryStoreExplorer.lua (in seconds)
 	CONTENTS_REFRESH_RATE = 5;
+	--seconds between network call retry attempts
+	RETRY_DELAY = 0.3;
 
 	MATCHMAKING_QUEUE = {
 		--the name of the queue passed to MemoryStoreService. WARNING: changing this while servers are running may have unintended consequences.
@@ -21,6 +23,15 @@ return {
 		QUEUE_ENTRY_LIFETIME = 300;
 	};
 
+	MATCH_MESSAGING = {
+		--the topic to subscribe and publish to with messagingservice
+		TOPIC = "Matchmaking";
+		--maximum number of attempts to start a match
+		MAX_SEND_RETRIES = 5;
+		--maximum number of attempts to subscribe to the topic
+		MAX_SUBSCRIBE_RETRIES = 500; --we REALLY don't want this failing
+	};
+
 	MUTEX = {
 		--name of DataStore containing mutex key
 		NAME = "MatchmakingMutex";
@@ -37,6 +48,5 @@ return {
 			--maximum number of players in a match
 			MAX = 8;
 		}
-
 	}
 }
