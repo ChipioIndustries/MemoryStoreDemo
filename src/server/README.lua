@@ -12,11 +12,52 @@ When enough players are present to create a match, the server reserves a server 
 
 When a lobby server detects a broadcast with one of its players' user IDs, it teleports the player to the server ID.
 
+LICENSE
+
+You are free to use this code in any way for any reason.
+If it breaks or causes something to break, it's not my fault.
+Whatever you make with this must be extremely cool.
+If you ask me a question that is already answered in this file I will scream incoherently.
+
 SYSTEM CONFIGURATION
 
-All contstants are hosted within the ReplicatedStorage.CONFIG module for easy configuration. For more advanced modification, refer to the module API reference below.
+All contstants are hosted within the ReplicatedStorage/CONFIG.lua module for easy configuration. For more advanced modification, refer to the module API reference below.
 
 MODULE API REFERENCE
+
+	CONFIG.lua
+	Duh.
+
+	CrossServerMutex.lua
+	A module that handles delegation of tasks to a specific server.
+
+		void init() - Begin occasional attempts to claim control
+		void assignJob(table job) - Adds job to a list of jobs to start when mutex control is claimed
+		boolean releaseAsync() - Waits for all jobs to complete and then releases control over the mutex
+		void requestReservation() - Attempt to claim mutex control. This is primarily to be called by the init method.
+
+		Sample Job:
+		{
+			void function startJob() - callback to start job
+			void function releaseAsync() - callback to end job as soon as possible. should yield until job is cleaned up.
+		}
+
+	GetServerType.lua
+	A function that returns the current server type based on whether or not a reserved server ID is present.
+
+		Usage:
+		if GetServerType() == Enums.ServerType.Lobby then
+			print("lobby")
+		end
+
+	Enums.lua
+	A dictionary of strings to be compared against one another.
+
+	MatchmakingProcessor.lua
+	A module that controls the matchmaking job.
+
+		void init() - Send matchmaking job to CrossServerMutex.lua
+		bool addPlayer(int userId) - Add player to matchmaking queue. Returns whether or not it was successful.
 
 	MemoryStoreExplorer.lua
 	Occasionally prints contents of all MemoryStores across the game. Useful for debugging.
@@ -46,33 +87,14 @@ MODULE API REFERENCE
 			}
 		}
 
-	MatchmakingProcessor.lua
-	A module that controls the matchmaking job.
+	MessagingProcessor.lua
+	Handles the sending and receiving of match data across servers.
 
-		void init() - Send matchmaking job to CrossServerMutex.lua
-		bool addPlayer(int userId) - Add player to matchmaking queue. Returns whether or not it was successful.
+	PlayerTeleportHandler.lua
+	Handles the teleportation of players to lobby and match servers.
 
-	CrossServerMutex.lua
-	A module that handles delegation of tasks to a specific server.
-
-		void init() - Begin occasional attempts to claim control
-		void assignJob(table job) - Adds job to a list of jobs to start when mutex control is claimed
-		boolean releaseAsync() - Waits for all jobs to complete and then releases control over the mutex
-		void requestReservation() - Attempt to claim mutex control. This is primarily to be called by the init method.
-
-		Sample Job:
-		{
-			void function startJob() - callback to start job
-			void function releaseAsync() - callback to end job as soon as possible. should yield until job is cleaned up.
-		}
-
-	GetServerType.lua
-	A function that returns the current server type based on whether or not a reserved server ID is present.
-
-		Usage:
-		if GetServerType() == Enums.ServerType.Lobby then
-			print("lobby")
-		end
+	SafeTeleport.lua
+	A teleport function with integrated retries. A drop-in replacement for TeleportService:TeleportAsync().
 
 	TableUtility.lua
 	A module of functions for dealing with immutable tables (it's not Cryo, don't think it's Cryo)
@@ -88,5 +110,7 @@ NOTES
 	For example, lower="001" higher="015" will return all values from "002" to "014".
 
 	ReadAsync returns nil if queue is empty.
+
+	I wish I could have syntax higlighting in comments, my eyes are bleeding.
 
 ]]
