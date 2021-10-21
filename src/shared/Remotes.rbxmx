@@ -2,14 +2,14 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Folder" referent="RBX0A00BF99698749BEB761DEAB399C8CD2">
+	<Item class="Folder" referent="RBXBEED766D3C054CD696873EC4F4CDD967">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<string name="Name">Remotes</string>
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
 		</Properties>
-		<Item class="RemoteEvent" referent="RBX57BFD8DBCC044A01B900B12D38E8A4FE">
+		<Item class="RemoteEvent" referent="RBXDC1265D4EB65426ABE56198038F0458A">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<string name="Name">AddToMatchmaking</string>
@@ -17,10 +17,18 @@
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
 		</Item>
-		<Item class="RemoteEvent" referent="RBX7A7602370E054DE39C6A515CBAF013CD">
+		<Item class="RemoteEvent" referent="RBX9B9302B1494C4E99B9A76C7E2214C8CF">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<string name="Name">EndMatch</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+			</Properties>
+		</Item>
+		<Item class="RemoteFunction" referent="RBXDFC648AFBF8E4CE3B4D3A187A97048FC">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<string name="Name">GetServerType</string>
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
