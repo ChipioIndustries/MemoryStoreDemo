@@ -14,6 +14,7 @@ local QUEUE_ENTRY_LIFETIME = CONFIG.MATCHMAKING_QUEUE.QUEUE_ENTRY_LIFETIME
 local remotes = ReplicatedStorage.Remotes
 local addToMatchmaking = remotes.AddToMatchmaking
 local endMatch = remotes.EndMatch
+local getServerType = remotes.GetServerType
 
 local serverType = GetServerType()
 
@@ -35,6 +36,12 @@ local function checkMatchEndVotes()
 	if voteCount > #players / 2 then
 		PlayerTeleportHandler:endMatch()
 	end
+end
+
+local function onPlayerRemoving(player)
+	local userId = player.UserId
+	matchmakingCache[userId] = nil
+	endMatchVotes[userId] = nil
 end
 
 function ClientRequestHandler:requestAddToMatchmaking(player)
@@ -64,11 +71,9 @@ function ClientRequestHandler:init()
 	addToMatchmaking.OnServerEvent:Connect(self.requestAddToMatchmaking)
 	endMatch.OnServerEvent:Connect(self.requestEndMatch)
 
-	Players.PlayerRemoving:Connect(function(player)
-		local userId = player.UserId
-		matchmakingCache[userId] = nil
-		endMatchVotes[userId] = nil
-	end)
+	getServerType.OnServerInvoke = GetServerType
+	
+	Players.PlayerRemoving:Connect(onPlayerRemoving)
 end
 
 return ClientRequestHandler
