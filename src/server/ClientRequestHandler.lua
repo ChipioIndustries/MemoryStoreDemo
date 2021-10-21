@@ -13,7 +13,7 @@ local QUEUE_ENTRY_LIFETIME = CONFIG.MATCHMAKING_QUEUE.QUEUE_ENTRY_LIFETIME
 
 local remotes = ReplicatedStorage.Remotes
 local addToMatchmaking = remotes.AddToMatchmaking
-local endMatch = remotes.endMatch
+local endMatch = remotes.EndMatch
 
 local serverType = GetServerType()
 
