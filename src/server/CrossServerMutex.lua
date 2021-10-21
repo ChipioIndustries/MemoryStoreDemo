@@ -4,6 +4,9 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 
 local CONFIG = require(ReplicatedStorage.CONFIG)
+
+local RETRY_DELAY = CONFIG.RETRY_DELAY
+
 local MUTEX_CONFIG = CONFIG.MUTEX
 local MUTEX_NAME = MUTEX_CONFIG.NAME
 local MUTEX_KEY = MUTEX_CONFIG.KEY
@@ -27,7 +30,7 @@ function CrossServerMutex:requestReservation()
 		end
 	end)
 	if result == self.jobId then
-		for index, job in pairs(assignedJobs) do
+		for _, job in pairs(assignedJobs) do
 			job.startJob()
 		end
 	elseif not success then
@@ -65,6 +68,7 @@ function CrossServerMutex:releaseAsync()
 				return nil
 			end
 		end)
+		task.wait(RETRY_DELAY)
 	until success
 
 	return true
@@ -83,6 +87,8 @@ function CrossServerMutex:init()
 				self:requestReservation()
 			end
 		end)
+
+		game:BindToClose(self.releaseAsync)
 	end
 end
 

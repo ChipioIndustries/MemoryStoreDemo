@@ -13,7 +13,7 @@ local serverType = GetServerType()
 
 local PlayerTeleportHandler = {}
 
-function receiveMatch(match)
+local function receiveMatch(match)
 	local players = match.players
 	local reservedServerCode = match.reservedServerCode
 

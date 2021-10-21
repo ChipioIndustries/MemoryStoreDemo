@@ -26,13 +26,13 @@ All contstants are hosted within the ReplicatedStorage/CONFIG.lua module for eas
 MODULE API REFERENCE
 
 	CONFIG.lua
-	Duh.
+	Duh. Change stuff in here.
 
 	CrossServerMutex.lua
 	A module that handles delegation of tasks to a specific server.
 
 		void init() - Begin occasional attempts to claim control
-		void assignJob(table job) - Adds job to a list of jobs to start when mutex control is claimed
+		void assignJob(dictionary job) - Adds job to a list of jobs to start when mutex control is claimed
 		boolean releaseAsync() - Waits for all jobs to complete and then releases control over the mutex
 		void requestReservation() - Attempt to claim mutex control. This is primarily to be called by the init method.
 
@@ -90,8 +90,21 @@ MODULE API REFERENCE
 	MessagingProcessor.lua
 	Handles the sending and receiving of match data across servers.
 
+		void init() - Start listening for new matches.
+		void bindToMatchReceipt(function(dictionary match) callback) - Add function to run when a match is received
+		bool sendMatch(dictionary match) - Sends match data to other servers and returns if the call succeeded
+
+		Example match data:
+		{
+			players = {18697683, 904822237};
+			reservedServerCode = "pretendthisisareservedservercode";
+		}
+
 	PlayerTeleportHandler.lua
 	Handles the teleportation of players to lobby and match servers.
+
+		void init() - Start listening for matches if the server is a lobby
+		void endMatch() - Teleport all players back to a lobby, allowing the server to close
 
 	SafeTeleport.lua
 	A teleport function with integrated retries. A drop-in replacement for TeleportService:TeleportAsync().
@@ -112,5 +125,9 @@ NOTES
 	ReadAsync returns nil if queue is empty.
 
 	I wish I could have syntax higlighting in comments, my eyes are bleeding.
+
+	What happens if a group teleport fails for a select number of players?
+	Can I retry with the same table of players or will that throw an error?
+	TODO: ask eric
 
 ]]
