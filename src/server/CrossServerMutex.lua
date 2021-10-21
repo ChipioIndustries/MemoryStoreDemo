@@ -31,7 +31,7 @@ function CrossServerMutex:requestReservation()
 			job.startJob()
 		end
 	elseif not success then
-		warn(result)
+		warn(result, debug.traceback())
 	end
 end
 

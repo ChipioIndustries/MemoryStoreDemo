@@ -29,7 +29,7 @@ function MemoryStoreExplorer:getQueuesContents(): table
 		repeat
 			local success: boolean, result, deletionKey: string = pcall(queue.ReadAsync, queue, 100, false, 0.1)
 			if not success then
-				warn(result)
+				warn(result, debug.traceback())
 			elseif result then
 				for index, value in pairs(result) do
 					table.insert(contents, value)
@@ -56,7 +56,7 @@ function MemoryStoreExplorer:getSortedMapsContents(): table
 		repeat
 			local success: boolean, result = pcall(sortedMap.GetRangeAsync, sortedMap, Enum.SortDirection.Ascending, 200, lastKey)
 			if not success then
-				warn(result)
+				warn(result, debug.traceback())
 			elseif result and table.getn(result) > 0 then
 				for index, value in pairs(result) do
 					contents[index] = value

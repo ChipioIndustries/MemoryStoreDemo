@@ -1,4 +1,5 @@
 local MemoryStoreService = game:GetService("MemoryStoreService")
+local TeleportService = game:GetService("TeleportService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 
@@ -60,8 +61,12 @@ function matchmakingJob.startJob()
 					local isLargeEnough = #nextMatch >= MIN_MATCH_SIZE
 
 					if isLargeEnough then
-						--TODO: make match!
-						local matchMade = MessagingProcessor:sendMatch(nextMatch)
+						local reservedServerCode = TeleportService:ReserveServer(game.PlaceId)
+
+						local matchMade = MessagingProcessor:sendMatch({
+							players = nextMatch;
+							reservedServerCode = reservedServerCode;
+						})
 
 						if matchMade then
 							pool = TableUtility:removeRange(pool, 1, MAX_MATCH_SIZE)
@@ -107,7 +112,7 @@ function matchmakingJob.startJob()
 					)
 
 					local failedCall = (not success or not results or #results == 0)
-
+					
 					if not failedCall then
 						table.insert(deletionKeys, deletionKey)
 
@@ -129,12 +134,11 @@ function matchmakingJob.startJob()
 					)
 
 					if not success then
-						warn(result)
+						warn(result, debug.traceback())
 					end
 				end
 			else
 				isRetrieving = false
-
 				break
 			end
 		end
@@ -168,7 +172,7 @@ function MatchmakingProcessor:addPlayer(userId)
 	until success or attempts >= MAX_ADD_RETRIES
 
 	if not success then
-		warn(result)
+		warn(result, debug.traceback())
 	end
 
 	return success

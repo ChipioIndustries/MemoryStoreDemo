@@ -23,6 +23,11 @@ return {
 		QUEUE_ENTRY_LIFETIME = 300;
 	};
 
+	TELEPORTATION = {
+		--maximum number of attempts to teleport players to the match
+		MAX_TELEPORT_RETRIES = 5;
+	};
+
 	MATCH_MESSAGING = {
 		--the topic to subscribe and publish to with messagingservice
 		TOPIC = "Matchmaking";

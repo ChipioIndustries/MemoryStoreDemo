@@ -11,21 +11,27 @@ local MAX_SUBSCRIBE_RETRIES = CONFIG.MATCH_MESSAGING.MAX_SUBSCRIBE_RETRIES
 
 local MessagingProcessor = {}
 
-function MessagingProcessor:sendMatch(players)
+local matchReceiptCallbacks = {}
+
+function MessagingProcessor:sendMatch(match)
 	local success, result
 	local attempts = 0
 
 	repeat
 		attempts += 1
-		success, result = pcall(MessagingService.PublishAsync, MessagingService, TOPIC, players)
+		success, result = pcall(MessagingService.PublishAsync, MessagingService, TOPIC, match)
 		task.wait(RETRY_DELAY)
 	until success or attempts >= MAX_SEND_RETRIES
 
 	if not success then
-		warn(result)
+		warn(result, debug.traceback())
 	end
 
 	return success
+end
+
+function MessagingProcessor:bindToMatchReceipt(callback)
+	table.insert(matchReceiptCallbacks, callback)
 end
 
 function MessagingProcessor:init()
@@ -39,14 +45,16 @@ function MessagingProcessor:init()
 			MessagingService,
 			TOPIC,
 			function(message)
-				
+				for _, callback in pairs(matchReceiptCallbacks) do
+					task.spawn(callback, message.Data)
+				end
 			end
 		)
 		task.wait(RETRY_DELAY)
 	until success or attempts >= MAX_SUBSCRIBE_RETRIES
 
 	if not success then
-		warn(result)
+		warn(result, debug.traceback())
 	end
 end
 
