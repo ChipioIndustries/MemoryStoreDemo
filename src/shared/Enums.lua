@@ -4,5 +4,10 @@ return {
 	ServerType = {
 		Lobby = "Lobby";
 		Match = "Match";
-	}
+	};
+	LogType = {
+		Print = "Print";
+		Warn = "Warn";
+		Error = "Error";
+	};
 }

@@ -5,6 +5,8 @@ return {
 	CONTENTS_REFRESH_RATE = 5;
 	--seconds between network call retry attempts
 	RETRY_DELAY = 0.3;
+	--should status messages be loggged?
+	LOGGING = true;
 
 	MATCHMAKING_QUEUE = {
 		--the name of the queue passed to MemoryStoreService. WARNING: changing this while servers are running may have unintended consequences.

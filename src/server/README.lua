@@ -42,6 +42,9 @@ MODULE API REFERENCE
 			void function releaseAsync() - callback to end job as soon as possible. should yield until job is cleaned up.
 		}
 
+	Enums.lua
+	A dictionary of strings to be compared against one another.
+
 	GetServerType.lua
 	A function that returns the current server type based on whether or not a reserved server ID is present.
 
@@ -50,8 +53,17 @@ MODULE API REFERENCE
 			print("lobby")
 		end
 
-	Enums.lua
-	A dictionary of strings to be compared against one another.
+	InterfaceController.lua
+	Loads the interface into the PlayerGui and handles transmitting user input to the server.
+
+		void init() - Loads the interface, updates UI, and connects listeners.
+
+	Log.lua
+	Drop-in replacements for logging functions (print, warn, error) with a shutoff switch and call stacks
+
+		void print(tuple contents) - print contents with plain white text
+		void warn(tuple contents) - print contents with bold yellow text
+		void error(tuple contents) - print contents in red and kill the thread
 
 	MatchmakingProcessor.lua
 	A module that controls the matchmaking job.
@@ -113,8 +125,8 @@ MODULE API REFERENCE
 	A module of functions for dealing with immutable tables (it's not Cryo, don't think it's Cryo)
 
 		table removeRange(table table, int start, int stop) - returns new table minus [start, stop] range.
-		table join(table1, table2...) - returns a new table containing contents of all provided tables.
-										order of arguments determines final order in table.
+		table join(tuple tables) - returns a new table containing contents of all provided tables.
+									order of arguments determines final order in table.
 
 NOTES
 
