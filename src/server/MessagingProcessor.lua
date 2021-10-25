@@ -2,6 +2,7 @@ local MessagingService = game:GetService("MessagingService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local CONFIG = require(ReplicatedStorage.CONFIG)
+local Log = require(ReplicatedStorage.Log)
 
 local RETRY_DELAY = CONFIG.RETRY_DELAY
 
@@ -24,7 +25,7 @@ function MessagingProcessor:sendMatch(match)
 	until success or attempts >= MAX_SEND_RETRIES
 
 	if not success then
-		warn(result, debug.traceback())
+		Log:warn(result, debug.traceback())
 	end
 
 	return success
@@ -54,7 +55,7 @@ function MessagingProcessor:init()
 	until success or attempts >= MAX_SUBSCRIBE_RETRIES
 
 	if not success then
-		warn(result, debug.traceback())
+		Log:warn(result, debug.traceback())
 	end
 end
 

@@ -3,6 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local MemoryStoreExplorer: table = {}
 
+local Log = require(ReplicatedStorage.Log)
 local CONFIG = require(ReplicatedStorage.CONFIG)
 local CONTENTS_REFRESH_RATE = CONFIG.CONTENTS_REFRESH_RATE
 
@@ -29,7 +30,7 @@ function MemoryStoreExplorer:getQueuesContents(): table
 		repeat
 			local success: boolean, result, deletionKey: string = pcall(queue.ReadAsync, queue, 100, false, 0.1)
 			if not success then
-				warn(result, debug.traceback())
+				Log:warn(result, debug.traceback())
 			elseif result then
 				for index, value in pairs(result) do
 					table.insert(contents, value)
@@ -56,7 +57,7 @@ function MemoryStoreExplorer:getSortedMapsContents(): table
 		repeat
 			local success: boolean, result = pcall(sortedMap.GetRangeAsync, sortedMap, Enum.SortDirection.Ascending, 200, lastKey)
 			if not success then
-				warn(result, debug.traceback())
+				Log:warn(result, debug.traceback())
 			elseif result and table.getn(result) > 0 then
 				for index, value in pairs(result) do
 					contents[index] = value
@@ -84,7 +85,7 @@ function MemoryStoreExplorer:init()
 	task.spawn(function()
 		while true do
 			task.wait(CONTENTS_REFRESH_RATE)
-			print(MemoryStoreExplorer:getAllContents())
+			Log:print(MemoryStoreExplorer:getAllContents())
 		end
 	end)
 end

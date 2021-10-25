@@ -2,6 +2,7 @@ local TeleportService = game:GetService("TeleportService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local CONFIG = require(ReplicatedStorage.CONFIG)
+local Log = require(ReplicatedStorage.Log)
 
 local RETRY_DELAY = CONFIG.RETRY_DELAY
 local MAX_TELEPORT_RETRIES = CONFIG.TELEPORTATION.MAX_TELEPORT_RETRIES
@@ -60,7 +61,7 @@ local function SafeTeleport(placeId, players, options)
 	until success or attemptIndex == MAX_TELEPORT_RETRIES -- stop trying to teleport if call was successful, or if retry limit has been reached
 
 	if not success then
-		warn(result) -- print the failure reason to output
+		Log:warn(result) -- print the failure reason to output
 		connection:Disconnect()
 	else
 		-- wait until all players have teleported successfully

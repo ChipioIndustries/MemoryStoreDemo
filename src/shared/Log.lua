@@ -15,7 +15,7 @@ local Log = {}
 
 function log(type, ...)
 	if LOGGING then
-		local stack = debug.traceback(3)
+		local stack = debug.traceback(nil, 3)
 		local logFunction = printFunctionMap[type]
 		logFunction(...)
 		logFunction(stack)

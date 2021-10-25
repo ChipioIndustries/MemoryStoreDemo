@@ -6,7 +6,7 @@ This serves as an example of how MemoryStoreService can be utilized to create a 
 
 When a player joins a "lobby" server (non-reserved server) they are added to a MemoryStoreQueue automatically.
 
-One server (assigned by a mutex, also tracked using MemoryStoreService) is responsible for reading the queue and grouping players into matches.
+One server (assigned by a mutex, tracked using DataStoreService) is responsible for reading the queue and grouping players into matches.
 
 When enough players are present to create a match, the server reserves a server to host the match and then broadcasts the server ID along with a list of user IDs via MessagingService to the other lobby servers.
 
@@ -23,10 +23,23 @@ SYSTEM CONFIGURATION
 
 All contstants are hosted within the ReplicatedStorage/CONFIG.lua module for easy configuration. For more advanced modification, refer to the module API reference below.
 
+ARCHITECTURE
+
+This example uses a Single-Script Architecture (SSA) where the code is divided up into "modules" which are required by a single script
+on the server and client and initialized in a specific order. This is done to make the individual systems easier to understand and easier
+to move to other projects, as well as preventing race conditions (i.e. the cross-server mutex starting all jobs before the matchmaking job has registered.)
+
 MODULE API REFERENCE
 
 	CONFIG.lua
 	Duh. Change stuff in here.
+
+	ClientRequestHandler.lua
+	A module that receives user input and processes it accordingly.
+
+		void init() - Bind functions to their associated remotes
+		void requestAddToMatchmaking(Player player) - Add player to matchmaking queue if they aren't already in it
+		void requestEndMatch(Player player) - Cast player vote to end the match and return to lobby
 
 	CrossServerMutex.lua
 	A module that handles delegation of tasks to a specific server.
@@ -138,8 +151,7 @@ NOTES
 
 	I wish I could have syntax higlighting in comments, my eyes are bleeding.
 
-	What happens if a group teleport fails for a select number of players?
-	Can I retry with the same table of players or will that throw an error?
-	TODO: ask eric
+	GetServerType MUST be called on the server because game.PrivateServerId doesn't replicate
+	to the client for some reason.
 
 ]]

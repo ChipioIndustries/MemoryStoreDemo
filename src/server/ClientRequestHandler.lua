@@ -27,12 +27,14 @@ local function checkMatchEndVotes()
 	local voteCount = 0
 	local players = Players:GetPlayers()
 
+	-- only count votes from players still in the game
 	for _, player in pairs(players) do
 		if endMatchVotes[player.UserId] then
 			voteCount += 1
 		end
 	end
 
+	-- end the match if half the players vote for it
 	if voteCount > #players / 2 then
 		PlayerTeleportHandler:endMatch()
 	end
@@ -47,6 +49,7 @@ end
 function ClientRequestHandler:requestAddToMatchmaking(player)
 	local userId = player.UserId
 	if serverType == Enums.ServerType.Lobby then
+		-- has the player joined the queue too recently?
 		local timestamp = matchmakingCache[userId]
 		if (not timestamp) or tick() - timestamp > QUEUE_ENTRY_LIFETIME then
 			local result = MatchmakingProcessor:addPlayer(userId)

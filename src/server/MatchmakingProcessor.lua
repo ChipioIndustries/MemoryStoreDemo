@@ -8,6 +8,7 @@ local MessagingProcessor = require(ServerScriptService.MessagingProcessor)
 local TableUtility = require(ReplicatedStorage.TableUtility)
 
 local CONFIG = require(ReplicatedStorage.CONFIG)
+local Log = require(ReplicatedStorage.Log)
 
 local RETRY_DELAY = CONFIG.RETRY_DELAY
 
@@ -48,7 +49,7 @@ function matchmakingJob.startJob()
 			else
 				task.wait(EXTENDED_YIELD)
 			end
-			print(cache)
+			Log:print(cache)
 
 			if not isReleasing then
 				local pool = {}
@@ -134,7 +135,7 @@ function matchmakingJob.startJob()
 				until failedCall
 
 				if not success then
-					warn(results)
+					Log:warn(results)
 				end
 
 				-- remove the grabbed players form the queue
@@ -146,7 +147,7 @@ function matchmakingJob.startJob()
 					)
 
 					if not success then
-						warn(result, debug.traceback())
+						Log:warn(result, debug.traceback())
 					end
 				end
 			else
@@ -185,7 +186,7 @@ function MatchmakingProcessor:addPlayer(userId)
 	until success or attempts >= MAX_ADD_RETRIES
 
 	if not success then
-		warn(result, debug.traceback())
+		Log:warn(result, debug.traceback())
 	end
 
 	return success
