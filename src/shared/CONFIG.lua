@@ -23,6 +23,15 @@ return {
 		MAX_ADD_RETRIES = 5;
 		--how many seconds the player will be in the matchmaking queue for
 		QUEUE_ENTRY_LIFETIME = 300;
+		
+		PROCESSING_YIELD = {
+			--how long to wait between each processing of the cache
+			YIELD = 0.2;
+			--how long to wait between each processing of the cache during low player count
+			EXTENDED_YIELD = 3;
+			--how large the cache can be before yield is used instead of extended yield
+			EXTENDED_YIELD_MAX_CACHE_SIZE = 30;
+		};
 	};
 
 	TELEPORTATION = {
@@ -45,13 +54,13 @@ return {
 		--name of mutex key
 		KEY = "AssignedServer";
 		--how frequently (in seconds) the server attempts to reserve the mutex
-		CLAIM_ATTEMPT_RATE = 20;
+		CLAIM_ATTEMPT_RATE = 10;
 	};
 
 	MATCH = {
 		SIZE = {
 			--minimum number of players in a match
-			MIN = 2;
+			MIN = 1;
 			--maximum number of players in a match
 			MAX = 8;
 		}

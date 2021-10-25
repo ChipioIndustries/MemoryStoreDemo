@@ -48,7 +48,7 @@ function ClientRequestHandler:requestAddToMatchmaking(player)
 	local userId = player.UserId
 	if serverType == Enums.ServerType.Lobby then
 		local timestamp = matchmakingCache[userId]
-		if tick() - timestamp > QUEUE_ENTRY_LIFETIME then
+		if (not timestamp) or tick() - timestamp > QUEUE_ENTRY_LIFETIME then
 			local result = MatchmakingProcessor:addPlayer(userId)
 			if result then
 				matchmakingCache[player] = tick()
@@ -68,8 +68,12 @@ function ClientRequestHandler:requestEndMatch(player)
 end
 
 function ClientRequestHandler:init()
-	addToMatchmaking.OnServerEvent:Connect(self.requestAddToMatchmaking)
-	endMatch.OnServerEvent:Connect(self.requestEndMatch)
+	addToMatchmaking.OnServerEvent:Connect(function(player)
+		self:requestAddToMatchmaking(player)
+	end)
+	endMatch.OnServerEvent:Connect(function(player)
+		self:requestEndMatch(player)
+	end)
 
 	getServerType.OnServerInvoke = GetServerType
 	

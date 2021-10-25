@@ -2,7 +2,7 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="ScreenGui" referent="RBX552FBDDEAE55461A8EF5C4BE81F1DFF3">
+	<Item class="ScreenGui" referent="RBX109BBAC4E74848C1B054D42CF57FC1E7">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<bool name="AutoLocalize">true</bool>
@@ -16,7 +16,7 @@
 			<BinaryString name="Tags"></BinaryString>
 			<token name="ZIndexBehavior">1</token>
 		</Properties>
-		<Item class="Frame" referent="RBXF0855CD221F34605AB0CAAB112CFAC51">
+		<Item class="Frame" referent="RBX0961697BCE9448DAA0D274A1F65C4E9D">
 			<Properties>
 				<bool name="Active">false</bool>
 				<Vector2 name="AnchorPoint">
@@ -59,7 +59,7 @@
 				<Ref name="SelectionImageObject">null</Ref>
 				<UDim2 name="Size">
 					<XS>0</XS>
-					<XO>300</XO>
+					<XO>340</XO>
 					<YS>0</YS>
 					<YO>150</YO>
 				</UDim2>
@@ -70,7 +70,7 @@
 				<bool name="Visible">true</bool>
 				<int name="ZIndex">1</int>
 			</Properties>
-			<Item class="TextLabel" referent="RBX59F688DADB3C4D1388FB53EA136F0BCC">
+			<Item class="TextLabel" referent="RBXB0CBE094A0A948718095C473D99D6B4E">
 				<Properties>
 					<bool name="Active">false</bool>
 					<Vector2 name="AnchorPoint">
@@ -130,7 +130,7 @@
 						<G>1</G>
 						<B>1</B>
 					</Color3>
-					<bool name="TextScaled">true</bool>
+					<bool name="TextScaled">false</bool>
 					<float name="TextSize">36</float>
 					<Color3 name="TextStrokeColor3">
 						<R>0</R>
@@ -147,7 +147,7 @@
 					<int name="ZIndex">1</int>
 				</Properties>
 			</Item>
-			<Item class="TextButton" referent="RBX9935F31945454A69ACB7FC7A3F19CAFA">
+			<Item class="TextButton" referent="RBX6CB2DD2C1597494AB026D780AE0C70F4">
 				<Properties>
 					<bool name="Active">true</bool>
 					<Vector2 name="AnchorPoint">
@@ -228,7 +228,7 @@
 					<int name="ZIndex">1</int>
 				</Properties>
 			</Item>
-			<Item class="UIPadding" referent="RBXAB2AAD4AC65943808445654E551E94F2">
+			<Item class="UIPadding" referent="RBX26C23E360C924EC59582A23FD3467BA8">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<string name="Name">UIPadding</string>
@@ -252,7 +252,7 @@
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="UIListLayout" referent="RBX1F4B8AE519C74562B6246BA72AE8B120">
+			<Item class="UIListLayout" referent="RBX2DCCD8A7E63445DE92AB52D0A6623592">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<token name="FillDirection">1</token>

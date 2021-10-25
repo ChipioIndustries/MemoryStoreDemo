@@ -5,7 +5,7 @@ local ServerScriptService = game:GetService("ServerScriptService")
 
 local CrossServerMutex = require(ServerScriptService.CrossServerMutex)
 local MessagingProcessor = require(ServerScriptService.MessagingProcessor)
-local TableUtility = require(ServerScriptService.TableUtility)
+local TableUtility = require(ReplicatedStorage.TableUtility)
 
 local CONFIG = require(ReplicatedStorage.CONFIG)
 
@@ -17,6 +17,10 @@ local READ_BATCH_SIZE = CONFIG.MATCHMAKING_QUEUE.READ_BATCH_SIZE
 local QUEUE_RETRIEVAL_RATE = CONFIG.MATCHMAKING_QUEUE.QUEUE_RETRIEVAL_RATE
 local MAX_ADD_RETRIES = CONFIG.MATCHMAKING_QUEUE.MAX_ADD_RETRIES
 local QUEUE_ENTRY_LIFETIME = CONFIG.MATCHMAKING_QUEUE.QUEUE_ENTRY_LIFETIME
+
+local YIELD = CONFIG.MATCHMAKING_QUEUE.PROCESSING_YIELD.YIELD
+local EXTENDED_YIELD = CONFIG.MATCHMAKING_QUEUE.PROCESSING_YIELD.EXTENDED_YIELD
+local EXTENDED_YIELD_MAX_CACHE_SIZE = CONFIG.MATCHMAKING_QUEUE.PROCESSING_YIELD.EXTENDED_YIELD_MAX_CACHE_SIZE
 
 local MAX_MATCH_SIZE = CONFIG.MATCH.SIZE.MAX
 local MIN_MATCH_SIZE = CONFIG.MATCH.SIZE.MIN
@@ -39,7 +43,12 @@ function matchmakingJob.startJob()
 	--processing loop
 	task.spawn(function()
 		while true do
-			task.wait()
+			if #cache > EXTENDED_YIELD_MAX_CACHE_SIZE then
+				task.wait(YIELD)
+			else
+				task.wait(EXTENDED_YIELD)
+			end
+			print(cache)
 
 			if not isReleasing then
 				local pool = {}
@@ -105,14 +114,14 @@ function matchmakingJob.startJob()
 				repeat
 					success, results, deletionKey = pcall(
 						queue.ReadAsync,
-						MemoryStoreService,
+						queue,
 						READ_BATCH_SIZE,
 						false,
 						3
 					)
 
 					local failedCall = (not success or not results or #results == 0)
-					
+
 					if not failedCall then
 						table.insert(deletionKeys, deletionKey)
 
@@ -129,7 +138,7 @@ function matchmakingJob.startJob()
 				for _, deletionKey in pairs(deletionKeys) do
 					local success, result = pcall(
 						queue.RemoveAsync,
-						MemoryStoreService,
+						queue,
 						deletionKey
 					)
 
