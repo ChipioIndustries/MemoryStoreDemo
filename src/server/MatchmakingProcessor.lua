@@ -40,7 +40,7 @@ function matchmakingJob.startJob()
 	isProcessing = true
 	isRetrieving = true
 
-	--processing loop
+	-- processing loop
 	task.spawn(function()
 		while true do
 			if #cache > EXTENDED_YIELD_MAX_CACHE_SIZE then
@@ -53,13 +53,14 @@ function matchmakingJob.startJob()
 			if not isReleasing then
 				local pool = {}
 
-				--move player cache to pool for processing, then clear cache
+				-- move player cache to pool for processing, then clear cache
 				for i, v in pairs(cache) do
 					pool[i] = v
 				end
 
 				cache = {}
 
+				-- make and start matches until there are not enough players in the pool
 				repeat
 					local nextMatch = {}
 
@@ -84,14 +85,14 @@ function matchmakingJob.startJob()
 
 				until not isLargeEnough
 
-				--add unprocessed players back to cache
+				-- add unprocessed players back to cache
 				cache = TableUtility:join(pool, cache)
 			else
-				--ensure no new players will be added to the cache
+				-- ensure no new players will be added to the cache
 				while isRetrieving do
 					task.wait()
 				end
-				--add all cached players who won't be processed back to the queue
+				-- add all cached players who won't be processed back to the queue
 				for _, player in pairs(cache) do
 					MatchmakingProcessor:addPlayer(player)
 				end
@@ -102,7 +103,7 @@ function matchmakingJob.startJob()
 		end
 	end)
 
-	--retrieval loop
+	-- retrieval loop
 	task.spawn(function()
 		while true do
 			task.wait(QUEUE_RETRIEVAL_RATE)
@@ -111,6 +112,7 @@ function matchmakingJob.startJob()
 				local deletionKeys = {}
 				local success, results, deletionKey
 
+				-- get players from queue until there's an error or the queue is empty
 				repeat
 					success, results, deletionKey = pcall(
 						queue.ReadAsync,
@@ -135,6 +137,7 @@ function matchmakingJob.startJob()
 					warn(results)
 				end
 
+				-- remove the grabbed players form the queue
 				for _, deletionKey in pairs(deletionKeys) do
 					local success, result = pcall(
 						queue.RemoveAsync,
@@ -157,6 +160,7 @@ end
 function matchmakingJob.releaseAsync()
 	isReleasing = true
 
+	-- wait until matchmaking processes are finished
 	while isProcessing or isRetrieving do
 		task.wait()
 	end

@@ -1,4 +1,4 @@
---a dictionary of values for standardizing function results across scripts
+-- a dictionary of values for standardizing function results across scripts
 
 return {
 	ServerType = {

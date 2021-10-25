@@ -39,8 +39,8 @@ function PlayerTeleportHandler:endMatch()
 	local players = Players:GetPlayers()
 
 	SafeTeleport(game.PlaceId, players)
-	--not including a reservedservercode will send players to a
-	--random public lobby server
+	-- not including a reservedservercode will send players to a
+	-- random public lobby server
 end
 
 function PlayerTeleportHandler:init()
