@@ -11,6 +11,7 @@ local RETRY_DELAY = CONFIG.RETRY_DELAY
 local MUTEX_CONFIG = CONFIG.MUTEX
 local MUTEX_NAME = MUTEX_CONFIG.NAME
 local MUTEX_KEY = MUTEX_CONFIG.KEY
+local MUTEX_RELEASED_KEY = MUTEX_CONFIG.RELEASED_KEY
 local CLAIM_ATTEMPT_RATE = MUTEX_CONFIG.CLAIM_ATTEMPT_RATE
 
 local Enums = require(ReplicatedStorage.Enums)
@@ -27,7 +28,7 @@ local CrossServerMutex = {}
 function CrossServerMutex:requestReservation()
 	Log:print("Attempting mutex reservation...")
 	local success, result = pcall(mutexStore.UpdateAsync, mutexStore, MUTEX_KEY, function(currentValue)
-		if not currentValue then
+		if not currentValue or currentValue == MUTEX_RELEASED_KEY then
 			return jobId
 		end
 	end)
@@ -69,7 +70,7 @@ function CrossServerMutex:releaseAsync()
 	repeat
 		success, result = pcall(mutexStore.UpdateAsync, mutexStore, MUTEX_KEY, function(currentValue)
 			if currentValue == jobId then
-				return nil
+				return MUTEX_RELEASED_KEY
 			end
 		end)
 		task.wait(RETRY_DELAY)

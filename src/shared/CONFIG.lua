@@ -57,6 +57,8 @@ return {
 		NAME = "MatchmakingMutex";
 		-- name of mutex key
 		KEY = "AssignedServer";
+		-- Key to indicate the mutex is released
+		RELEASED_KEY = "MutexReleased";
 		-- how frequently (in seconds) the server attempts to reserve the mutex
 		CLAIM_ATTEMPT_RATE = 10;
 	};
